@@ -2,8 +2,12 @@
 set -Eeuo pipefail
 
 # 修改默认IP & 固件名称 & 编译署名和时间
-sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.15.1/g' package/base-files/files/bin/config_generate
 sed -i "s/hostname='.*'/hostname='Roc'/g" package/base-files/files/bin/config_generate
+
+# 设置默认 root 密码为 password
+PASSWORD_HASH=$(openssl passwd -1 "password")
+sed -i "s|^root:[^:]*:|root:$PASSWORD_HASH:|" package/base-files/files/etc/shadow
 luci_system_js="feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js"
 firmware_version_anchor="_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),"
 grep -Fq "$firmware_version_anchor" "$luci_system_js" || { echo "Error: LuCI firmware version anchor was not found in $luci_system_js" >&2; exit 1; }
@@ -87,21 +91,14 @@ git clone --depth=1 https://github.com/laipeng668/luci-app-gecoosac package/luci
 git clone --depth=1 https://github.com/NONGFAH/luci-app-athena-led package/luci-app-athena-led
 chmod +x package/luci-app-athena-led/root/etc/init.d/athena_led package/luci-app-athena-led/root/usr/sbin/athena-led
 
-### PassWall & OpenClash ###
+### OpenClash ###
 
 # 移除 OpenWrt Feeds 自带的核心库
 rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
 
 # 移除 OpenWrt Feeds 过时的LuCI版本
-rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-openclash
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall package/luci-app-passwall
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-openclash
-
-# 清理 PassWall 的 chnlist 规则文件
-echo "baidu.com"  > package/luci-app-passwall/luci-app-passwall/root/usr/share/passwall/rules/chnlist
 
 ./scripts/feeds update -i -a
 ./scripts/feeds install -a
