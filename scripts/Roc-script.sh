@@ -100,8 +100,5 @@ rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2sock
 rm -rf feeds/luci/applications/luci-app-openclash
 git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-openclash
 
-# QModem - 4G/5G USB 上网模组管理
-git clone --depth=1 https://github.com/FUjr/QModem package/QModem
-
 ./scripts/feeds update -i -a
 ./scripts/feeds install -a
