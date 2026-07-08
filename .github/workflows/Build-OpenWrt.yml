@@ -204,10 +204,16 @@ jobs:
       run: |
         cd "$OPENWRT_PATH"
         echo -e "$(nproc) thread compile"
-        make -j"$(nproc)" V=sc 2>&1 | tee /tmp/compile.log || make -j1 V=sc 2>&1 | tee -a /tmp/compile.log
+        make -j"$(nproc)" 2>&1 | tee /tmp/compile.log
         echo "status=success" >> "$GITHUB_OUTPUT"
         echo "DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> "$GITHUB_ENV"
         echo "FILE_DATE=$(date +"%Y.%m.%d")" >> "$GITHUB_ENV"
+
+    - name: Compile Retry(串行重试)
+      if: failure()
+      run: |
+        cd "$OPENWRT_PATH"
+        make -j1 V=s 2>&1 | tee -a /tmp/compile.log
 
     - name: Upload Compile Log(上传编译日志)
       if: failure()
