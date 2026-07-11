@@ -1,0 +1,28 @@
+name: JDCloud-LiBwrt
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  Build:
+    uses: ./.github/workflows/Build-OpenWrt.yml
+    permissions:
+      contents: write
+      actions: write
+    with:
+      repo_url: https://github.com/LiBwrt/openwrt-6.x.git
+      repo_branch: main
+      config_file: configs/JDCloud.config
+      firmware_tag: JDCloud-LiBwrt
+      kernel_file: kernel-6.12
+      artifact_prefix: Arthur.Athena-LiBwrt
+      manifest_file: openwrt-qualcommax-ipq60xx.manifest
+      delete_old_workflows: true
+      release_summary: >-
+        基于 LiBwrt 主源（openwrt-6.x），NSS 全栈内置、WiFi 1200 满血。
+        含 QModem 图形界面（中文）、OpenClash、USB 供网全驱动、openssh-sftp-server。
+        默认地址 192.168.15.1，密码 password。

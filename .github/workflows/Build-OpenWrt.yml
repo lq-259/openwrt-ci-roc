@@ -223,7 +223,7 @@ jobs:
         cd "$OPENWRT_PATH"/bin/targets/*/*
         cp "$OPENWRT_PATH/.config" "$ARTIFACT_PREFIX.config"
         mv config.buildinfo "$ARTIFACT_PREFIX.config.buildinfo"
-        mv "$MANIFEST_FILE" "$ARTIFACT_PREFIX.manifest"
+        mv "$MANIFEST_FILE" "$ARTIFACT_PREFIX.manifest" 2>/dev/null || true
         case "$PACKAGE_EXTENSION" in
           apk | ipk) ;;
           *)
