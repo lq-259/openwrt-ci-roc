@@ -102,11 +102,7 @@ git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-open
 
 ### QModem ###
 
-# 从源码编译 QModem（去除非必要依赖，避免干扰 NSS make defconfig）
-git clone --depth=1 https://github.com/FUjr/QModem package/QModem
-sed -i '/kmod-mhi-wwan/d'   package/QModem/application/qmodem/Makefile
-sed -i '/quectel-CM-5G/d'   package/QModem/application/qmodem/Makefile
-sed -i '/quectel-CM-5G/d'   package/QModem/luci/luci-app-qmodem/Makefile 2>/dev/null || true
+# 源码编译与 NSS ECM 冲突（nss_rmnet_rx_get_ifnum 未定义），改为刷机后 apk/ipk 后装
 
 ./scripts/feeds update -i -a
 ./scripts/feeds install -a
