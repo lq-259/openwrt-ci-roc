@@ -104,5 +104,9 @@ git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-open
 
 # 源码编译与 NSS ECM 冲突（nss_rmnet_rx_get_ifnum 未定义），改为刷机后 apk/ipk 后装
 
+### TurboACC UI ###
+
+curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh | bash -s -- --no-sfe
+
 ./scripts/feeds update -i -a
 ./scripts/feeds install -a
