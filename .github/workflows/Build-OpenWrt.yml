@@ -257,9 +257,8 @@ jobs:
       if: steps.compile.outputs.status == 'success'
       uses: ncipollo/release-action@v1
       with:
-        name: ${{ inputs.firmware_tag }}
-        allowUpdates: true
-        tag: ${{ inputs.firmware_tag }}
+        name: ${{ inputs.firmware_tag }}-${{ env.FILE_DATE }}-#${{ github.run_number }}
+        tag: ${{ inputs.firmware_tag }}-${{ env.FILE_DATE }}-#${{ github.run_number }}
         token: ${{ github.token }}
         artifacts: ${{ env.FIRMWARE_PATH }}/*
         body: |
