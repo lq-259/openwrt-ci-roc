@@ -109,7 +109,15 @@ git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-open
 
 ### QModem ###
 
-# 源码编译与 NSS ECM 冲突（nss_rmnet_rx_get_ifnum 未定义），改为刷机后 apk/ipk 后装
+# 源码编译与 NSS ECM 冲突，改为固件内嵌 apk、首次启动自动安装
+mkdir -p files/root/qmodem files/etc/uci-defaults
+wget -qO /tmp/QModem.tar.gz https://github.com/FUjr/QModem/releases/download/v3.1.0/QModem-arm64_apk.tar.gz
+tar -xzf /tmp/QModem.tar.gz -C files/root/qmodem/
+cat > files/etc/uci-defaults/99-qmodem-install << 'UCIEOF'
+[ -d /root/qmodem ] && apk add --allow-untrusted /root/qmodem/*.apk && rm -rf /root/qmodem
+exit 0
+UCIEOF
+chmod +x files/etc/uci-defaults/99-qmodem-install
 
 ./scripts/feeds update -i -a
 ./scripts/feeds install -a
